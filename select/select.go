@@ -21,12 +21,22 @@ func fastSender(c chan<- int) {
 	}
 }
 
+func fasterSend(c chan<- []int) {
+	for {
+		c <- []int{1, 2, 3}
+		time.Sleep(200 * time.Millisecond)
+
+	}
+}
+
 // main starts the two senders and then goes into an infinite loop of receiving their messages.
 func main() {
 	ints := make(chan int)
 	go fastSender(ints)
 	strings := make(chan string)
 	go slowSender(strings)
+	sliceChan := make(chan []int)
+	go fasterSend(sliceChan)
 
 	for { // = while(true)
 		select {
@@ -34,6 +44,9 @@ func main() {
 			fmt.Println("Received a string", s)
 		case i := <-ints:
 			fmt.Println("Received an int", i)
+		case sl := <-sliceChan:
+			fmt.Println("Received an slice:", sl)
+
 		}
 	}
 }

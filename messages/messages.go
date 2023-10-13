@@ -17,7 +17,7 @@ func sendMessages(receiver chan string) {
 	for _, m := range messages {
 		fmt.Println("sendMessages is sending:", m)
 		receiver <- m
-		
+
 	}
 }
 
